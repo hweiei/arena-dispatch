@@ -1,41 +1,48 @@
-# TASK_ID: roundtrip-1
+# TASK_ID: csv-1
 
 ## 任务
 
-**先证明回路通了，别的都别做。**
+写一个 Python 脚本 `out/mdtable.py`，把 **Markdown 表格**转成 **CSV**。
 
-1. 克隆 `https://github.com/hweiei/arena-dispatch` 到 `/tmp/work`，进去
-2. 跑这几条，**原样记下输出**：
-   ```bash
-   uname -a
-   python3 --version
-   git ls-files | wc -l
-   git ls-files | head -20
-   ```
-3. **在回复的最后，贴一个 ```json 代码块**，形状如下（照抄这个结构，值换成你实测的）：
+用法：`python3 out/mdtable.py < input.md > out.csv`
+
+### 要求
+
+1. 只转换表格行（以 `|` 开头的行），**忽略表格以外的文字**
+2. 跳过 Markdown 的分隔行（形如 `|---|---|`）
+3. 去掉每个单元格前后的空格
+4. 正确处理单元格内容里**不**含 `|` 的情况即可（不用处理转义的 `\|`）
+5. **CSV 每格用双引号包起来**，内部的双引号翻倍（标准 CSV 转义）
+6. 脚本要能**从 stdin 读**，不要写死文件名
+
+### 你必须自己测
+
+在 `out/` 里建一个 `sample.md`，包含**至少 3 行数据**，**并且表格前后各有一段普通文字**（用来验证第 1 条）。
+然后跑：
+
+```bash
+python3 out/mdtable.py < out/sample.md
+```
+
+**把命令和原始输出一起贴回来。**
+
+## 交付
+
+在回复末尾贴一个 ```json 代码块：
 
 ```json
 {
-  "uname": "把 uname -a 的完整输出粘在这里",
-  "python3": "把 python3 --version 的输出粘在这里，没有就写 没有 python3",
-  "fileCount": 2,
-  "files": ["AGENTS.md", "TASK.md"],
-  "cloneSeconds": 3,
+  "script": "out/mdtable.py 的完整内容，作为一个字符串",
+  "sample": "out/sample.md 的完整内容",
+  "output": "python3 out/mdtable.py < out/sample.md 的原始输出",
+  "edgeCasesTried": ["你试过的边界情况，每条一句"],
   "failures": []
 }
 ```
 
 ## 硬要求
 
-- **`failures` 数组**：哪条命令没跑通就写进去，格式 `"命令 → 报错原文"`。
-  **没失败就留空数组。**
-- **不要美化、不要改写、不要总结成中文**——`uname` 和 `python3` 的值必须是**命令的原始输出**。
-- **哪个值你拿不到，就写 `null` 并在 `failures` 里说明**——**不要编一个看起来合理的值。**
-- **只贴一个 ```json 代码块**，不要在它外面重复内容。
-
-## 为什么这样设计
-
-发起方会解析那个 JSON 块。**这是回路的第一段证明**：
-你 clone 得到 → 你跑得出 → 你把结果结构化地还回来。
-
-**第二段（你 push 回 GitHub）需要凭据，那一步另说。**
+- **`output` 必须是命令的原始输出**，不要重排版、不要美化
+- **脚本要真的能跑**——你自己跑一遍再贴
+- 哪个要求你做不到，**照实写进 `failures`**，别假装做到了
+- **别把 `out/sample.md` 里的普通文字输出成 CSV 行**——那是第 1 条要说的事
