@@ -56,3 +56,22 @@
 前提：该会话已**归因出模型名**（`ModelTrace` → `arena-model.json`）并按模型名**重命名**（见 `arena-protocol.md`）。
 注入由 `tools/arena-inject-pack.mjs` 完成（一条消息：clone 交付仓 → 读本文件 → 配凭据 → 回报）。
 **密钥纪律**：优先让工作端**自己生成密钥对、只回报公钥**（私钥从不进入聊天 ✓）；把私钥贴进消息等于暴露一次 ✗。
+
+## 五、我们装的插件 → 它的通用版（2026-10-16 检索）
+
+这一节回答的是：**DSH 里那几个插件，各自对应的开源通用版是什么** —— 好让子智能体在没有 DSH 的环境里也能拿到同等能力。
+本机已装的插件（据 USERPROFILE/.dsh/ 下的插件目录判断）：engram / ig5 / mattskillsdeck / oss-prompt-optimizer / dsh-purge / guardian / agents-anywhere / llm-deepseek / dsh-chat-import / redteam（含 open-reverselab）/ scopesentry / univer / lingshu。
+
+| 我们的插件 | 它干什么 | 通用版（开源，能直接接给 agent） | 星 |
+|---|---|---|---|
+| engram（记忆宫殿：事实/偏好/决策/情景/技法 + 复习排期） | 本地优先的长期记忆与会话记忆 | MemPalace：本地优先记忆 + 时序实体关系图（含有效期）+ MCP server，SQLite 支撑；合格对照还有 Cognee、claude-obsidian | 59.5k / 32k / 15.5k |
+| ig5、redteam 里的 open-reverselab | Ghidra/x64dbg 逆向工作台（MCP） | open-reverselab：Ghidra + Frida + x64dbg + Rizin 的 100+ MCP 工具；同级还有 ghidra-mcp（200+ 工具、headless、Docker）、ReVa | 1.23k / 未核到 / 805 |
+| （逆向底层本体） | 反编译引擎 | NationalSecurityAgency/ghidra | 9.45k |
+| llm-deepseek、MCP 连接器 | 模型接入与工具网关 | LiteLLM（100+ provider 一个 OpenAI 兼容口）、Bifrost（MCP 网关：聚合多个 MCP、语义缓存、治理） | 33k / 8.6k |
+| mattskillsdeck（ISSUE/map 管理） | 任务与地图的本地台账 | Agent Plugins 1.0 打包标准（plugin.json + skills/ + mcp.json，跨客户端；2026-08 由 Vercel/AWS/GitHub/Microsoft/OpenAI 发起）+ 各家技能库 | 标准，无星 |
+| univer（文档/表格/幻灯片套件） | 文档与表格的 agent 操作面 | 未核到与它对等的单一开源项目（LibreOffice 无头 + 办公格式库只是方向） | 未核到 |
+| scopesentry（ASM 资产测绘） | 子域/端口/漏洞/URL 扫描与资产库 | 自身即开源；同级通用版未核到 | 未核到 |
+| oss-prompt-optimizer | 提示词优化 | DSPy（需集成，已在本包附录） | 38.6k |
+| dsh-purge、guardian、agents-anywhere、lingshu、dsh-chat-import | DSH 特有的指令层/守卫/会话迁移能力 | 未核到通用版（这类是本机形态特有的，不硬凑） | — |
+
+> 纪律：**没核到的就写未核到** —— 不拿相近项目冒充。星数为 2026-10-16 检索读数。
